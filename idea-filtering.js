@@ -15,12 +15,22 @@ if (Meteor.isClient) {
     }
   })
 
+  Template.entry_form.events({
+    'submit': function(event) {
+      event.preventDefault();
+      $input = $('input[name=entry_text')
+      Entries.insert({text: $input.val(),connections:[{_id:234234,relType:"child"}]});
+      //Entries.insert({text: $input.val(),connections:[{_id:234234,relType:"child"}]});
+      $input.val('');
+    }
+  })
+
   Template.entry_center.helpers({
     filtered_entries: function() {
       if (Session.get("search_input")) {
-        return Entries.find({text: {"$regex": Session.get("search_input")}});
+        return Entries.find({text: {"$regex": Session.get("search_input")}}, {"$sort": {"$natural": -1}});
       } else {
-        return Entries.find();
+        return Entries.find({}, {"$sort": {"$natural": -1}});
       }
     }
   });

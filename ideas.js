@@ -643,6 +643,7 @@ if (Meteor.isServer) {
     Meteor.startup(function() {
        if (Entries.find().count() === 0) {
             ideas.forEach(function(idea) {
+                idea["connections"] = [];
                 Entries.insert(idea);
             });
        }

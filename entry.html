@@ -1,5 +1,12 @@
 <template name="entry">
+  <a href="/idea/{{id}}">Sub Ideas</a>
   <div class="entry">{{{bolded_text}}}</div>
+</template>
+
+<template name="entry_form">
+  <form>
+    <input type="text" name="entry_text">
+  </form>
 </template>
 
 <template name="entry_center">
