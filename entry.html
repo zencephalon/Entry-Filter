@@ -1,0 +1,13 @@
+<template name="entry">
+  <div class="entry">{{text}}</div>
+</template>
+
+<template name="entry_center">
+  <input type="text" name="search">
+  <ul>
+    {{#each filtered_entries}}
+      {{> entry}}
+    {{/each}}
+  </ul>
+</template>
+
