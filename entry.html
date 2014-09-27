@@ -1,6 +1,9 @@
 <template name="entry">
-  <a href="/idea/{{id}}">Sub Ideas</a>
-  <div class="entry">{{{bolded_text}}}</div>
+<div class="entryContainer">
+<a href="/idea/{{id}}" data-idea-id="{{_id}}" class="subideas">::subideas::</a>
+<div class="entry">{{{bolded_text}}}</div>
+
+</div>
 </template>
 
 <template name="entry_form">

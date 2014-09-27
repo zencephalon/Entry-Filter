@@ -1,6 +1,7 @@
 if (Meteor.isClient) {
   // counter starts at 0
   Session.setDefault("counter", 0);
+  Session.setDefault("current_filter", {parent_id: null});
 
   Template.entry.helpers({
     bolded_text: function() {
@@ -12,6 +13,45 @@ if (Meteor.isClient) {
         text = text.replace(new RegExp(search_input, 'gi'), '<b>' + search_input + '</b>')
       }
       return text;
+    },
+
+    // entryNodeTextHtml: function() {
+
+    // },
+    // splitted: function() {
+    //   //if (this.text !== undefined) {
+    //     delims=['--',':'];
+    //     titleTxt=this.text.substr(0,80);
+    //     for(i in delims) {
+    //       titleTxt=titleTxt.substr(0,indexOf(delims[i]));
+    //     }
+
+    //     return {title:titleTxt,nontitle:this.text.substr(titleTxt.length)};
+    //   //}
+    // },
+    // title: function() {
+      
+    //   title=Template.entry.boldedText();
+      
+
+    //   splitted = Template.entry.splitted();
+    //   console.log(splitted);
+    //   //if (splitted !== undefined) {
+    //     return splitted[0].substr(80);
+    //   //}
+    // },
+    // nontitle: function() {
+    //   return this.splitted()[1];
+    // }
+  })
+
+  Template.entry.events({
+    'click a': function(event) {
+      event.preventDefault();
+      filter = Session.get("current_filter");
+      filter = {};
+      filter['parent_id'] = $(event.target).data("idea-id");
+      Session.set("current_filter", filter);
     }
   })
 
@@ -19,19 +59,20 @@ if (Meteor.isClient) {
     'submit': function(event) {
       event.preventDefault();
       $input = $('input[name=entry_text')
-      Entries.insert({text: $input.val(),connections:[{_id:234234,relType:"child"}]});
-      //Entries.insert({text: $input.val(),connections:[{_id:234234,relType:"child"}]});
+
+      Entries.insert({text: $input.val(), parent_id: Session.get("current_filter")["parent_id"]});
+
       $input.val('');
     }
   })
 
   Template.entry_center.helpers({
     filtered_entries: function() {
+      query = Session.get("current_filter");
       if (Session.get("search_input")) {
-        return Entries.find({text: {"$regex": Session.get("search_input")}}, {"$sort": {"$natural": -1}});
-      } else {
-        return Entries.find({}, {"$sort": {"$natural": -1}});
+        query[text] = {"$regex": Session.get("search_input")}
       }
+      return Entries.find(query, {"$sort": {"$natural": -1}});
     }
   });
 

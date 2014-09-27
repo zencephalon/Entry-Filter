@@ -1,1 +1,12 @@
 /* CSS declarations go here */
+.entry {
+  display: inline-block;
+}
+
+a.subideas{
+  text-decoration: none;
+  color:blue;
+}
+a.subideas:hover {
+  color:gray;
+}
