@@ -1,22 +1,25 @@
-<template name="entry">
-<div class="entryContainer">
+<template name="idea">
+<div class="ideaContainer">
 <a href="/idea/{{id}}" data-idea-id="{{_id}}" class="subideas">::subideas::</a>
-<div class="entry">{{{bolded_text}}}</div>
+<div class="idea">{{{bolded_text}}}</div>
 
 </div>
 </template>
 
-<template name="entry_form">
+<template name="idea_form">
   <form>
-    <input type="text" name="entry_text"> New Idea
+    <input type="text" name="idea_text"> New Idea
   </form>
 </template>
 
-<template name="entry_center">
+<template name="idea_board">
+  
+  <div>current idea: {{breadcrumb}}</div>
   <input type="text" name="search"> Search
+  {{> idea_form}}
   <ul>
-    {{#each filtered_entries}}
-      {{> entry}}
+    {{#each filtered_ideas}}
+      {{> idea}}
     {{/each}}
   </ul>
 </template>

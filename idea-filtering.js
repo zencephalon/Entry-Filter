@@ -1,9 +1,9 @@
 if (Meteor.isClient) {
   // counter starts at 0
   Session.setDefault("counter", 0);
-  Session.setDefault("current_filter", {parent_id: null});
+  Session.setDefault("current_idea", {parent_id: null});
 
-  Template.entry.helpers({
+  Template.idea.helpers({
     bolded_text: function() {
       text = this.text;
       search_input = Session.get("search_input");
@@ -15,26 +15,34 @@ if (Meteor.isClient) {
       return text;
     },
 
-    // entryNodeTextHtml: function() {
+    // ideaNodeTextHtml: function() {
 
     // },
-    // splitted: function() {
-    //   //if (this.text !== undefined) {
-    //     delims=['--',':'];
-    //     titleTxt=this.text.substr(0,80);
-    //     for(i in delims) {
-    //       titleTxt=titleTxt.substr(0,indexOf(delims[i]));
-    //     }
+    splitted: function() {
+      if (this.text !== undefined) {
+        delims=['--',':'];
+        titleTxt=this.text.substr(0,80);
+        for(i in delims) {
+          titleTxt=titleTxt.substr(0,indexOf(delims[i]));
+        }
 
-    //     return {title:titleTxt,nontitle:this.text.substr(titleTxt.length)};
-    //   //}
-    // },
+        return {title:titleTxt,nontitle:this.text.substr(titleTxt.length)};
+      }
+    },
+
+    title: function() {
+      splitted = Template.idea.splitted();
+      console.log(splitted);
+      if (splitted !== undefined) {
+        return splitted[0];
+      }
+    }
     // title: function() {
-      
-    //   title=Template.entry.boldedText();
-      
 
-    //   splitted = Template.entry.splitted();
+    //   title=Template.idea.boldedText();
+
+
+    //   splitted = Template.idea.splitted();
     //   console.log(splitted);
     //   //if (splitted !== undefined) {
     //     return splitted[0].substr(80);
@@ -45,38 +53,48 @@ if (Meteor.isClient) {
     // }
   })
 
-  Template.entry.events({
+  Template.idea.events({
     'click a': function(event) {
       event.preventDefault();
-      filter = Session.get("current_filter");
+      filter = Session.get("current_idea");
       filter = {};
       filter['parent_id'] = $(event.target).data("idea-id");
-      Session.set("current_filter", filter);
+      Session.set("current_idea", filter);
     }
   })
 
-  Template.entry_form.events({
+  Template.idea_form.events({
     'submit': function(event) {
       event.preventDefault();
-      $input = $('input[name=entry_text')
+      $input = $('input[name=idea_text')
 
-      Entries.insert({text: $input.val(), parent_id: Session.get("current_filter")["parent_id"]});
+      ideas.insert({text: $input.val(), parent_id: Session.get("current_idea")["parent_id"]});
 
       $input.val('');
     }
   })
 
-  Template.entry_center.helpers({
-    filtered_entries: function() {
-      query = Session.get("current_filter");
+  Template.idea_board.helpers({
+    filtered_ideas: function() {
+      query = Session.get("current_idea");
       if (Session.get("search_input")) {
         query[text] = {"$regex": Session.get("search_input")}
       }
-      return Entries.find(query, {"$sort": {"$natural": -1}});
+      return ideas.find(query, {"$sort": {"$natural": -1}});
+    },
+
+    breadcrumb: function() {
+      return Session.get("current_idea").parent_id;
+      // breadcrumb=[]
+      // breadcrumb.push(ideas.findOne())
+      // while(parent!==null) {
+
+      //   parent=findParent(parent_id).parent_id;
+      // }
     }
   });
 
-  Template.entry_center.events({
+  Template.idea_board.events({
     'keyup': function () {
       // increment the counter when button is clicked
       Session.set("search_input", $('input[name=search]').val());

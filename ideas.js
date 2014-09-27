@@ -358,7 +358,7 @@ var ideas = [
     {
         "author": "",
         "id": 71,
-        "text": "LiveLog --  Evernote + twitter (+ etherpad?). .realtime blogging -- people can see your unformed scratch thought process. entries should be hashtagged and have live search by hashtag started frontend:  ~jcole@mit.edu"
+        "text": "LiveLog --  Evernote + twitter (+ etherpad?). .realtime blogging -- people can see your unformed scratch thought process. ideas should be hashtagged and have live search by hashtag started frontend:  ~jcole@mit.edu"
     },
     {
         "author": "",
@@ -637,16 +637,16 @@ var ideas = [
     }
 ]
 
-Entries = new Meteor.Collection("entries");
+ideas = new Meteor.Collection("ideas");
 
 if (Meteor.isServer) {
     Meteor.startup(function() {
-       if (Entries.find().count() === 0) {
-            root_id = Entries.insert({text: "Hackathon Ideas"});
+       if (ideas.find().count() === 0) {
+            root_id = ideas.insert({text: "Hackathon Ideas"});
             ideas.forEach(function(idea) {
                 idea["relations"] = {};
                 idea["parent_id"] = root_id;
-                Entries.insert(idea);
+                ideas.insert(idea);
             });
        }
     });
