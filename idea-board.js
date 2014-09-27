@@ -68,7 +68,7 @@ if (Meteor.isClient) {
       event.preventDefault();
       $input = $('input[name=idea_text')
 
-      ideas.insert({text: $input.val(), parent_id: Session.get("current_idea")["parent_id"]});
+      Ideas.insert({text: $input.val(), parent_id: Session.get("current_idea")["parent_id"]});
 
       $input.val('');
     }
@@ -80,7 +80,7 @@ if (Meteor.isClient) {
       if (Session.get("search_input")) {
         query[text] = {"$regex": Session.get("search_input")}
       }
-      return ideas.find(query, {"$sort": {"$natural": -1}});
+      return Ideas.find(query, {"$sort": {"$natural": -1}});
     },
 
     breadcrumb: function() {

@@ -637,16 +637,16 @@ var ideas = [
     }
 ]
 
-ideas = new Meteor.Collection("ideas");
+Ideas = new Meteor.Collection("ideas");
 
 if (Meteor.isServer) {
     Meteor.startup(function() {
-       if (ideas.find().count() === 0) {
-            root_id = ideas.insert({text: "Hackathon Ideas"});
-            ideas.forEach(function(idea) {
+       if (Ideas.find().count() === 0) {
+            root_id = Ideas.insert({text: "Hackathon Ideas"});
+            Ideas.forEach(function(idea) {
                 idea["relations"] = {};
                 idea["parent_id"] = root_id;
-                ideas.insert(idea);
+                Ideas.insert(idea);
             });
        }
     });
