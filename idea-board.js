@@ -20,19 +20,22 @@ if (Meteor.isClient) {
     // },
     splitted: function() {
       if (this.text !== undefined) {
-        delims=['--',':'];
-        titleTxt=this.text.substr(0,80);
+        delims = ['--',':'];
+        titleTxt = this.text.substr(0,80);
         for(i in delims) {
           titleTxt=titleTxt.substr(0,indexOf(delims[i]));
         }
 
-        return {title:titleTxt,nontitle:this.text.substr(titleTxt.length)};
+        return {
+                title: titleTxt,
+                nontitle: this.text.substr(titleTxt.length)
+              };
       }
     },
 
     title: function() {
       splitted = Template.idea.splitted();
-      console.log(splitted);
+      // console.log(splitted);
       if (splitted !== undefined) {
         return splitted[0];
       }
@@ -43,7 +46,7 @@ if (Meteor.isClient) {
 
 
     //   splitted = Template.idea.splitted();
-    //   console.log(splitted);
+      // console.log(splitted);
     //   //if (splitted !== undefined) {
     //     return splitted[0].substr(80);
     //   //}
@@ -78,8 +81,10 @@ if (Meteor.isClient) {
     filtered_ideas: function() {
       query = Session.get("current_idea");
       if (Session.get("search_input")) {
-        query[text] = {"$regex": Session.get("search_input")}
+        query.text = {"$regex": Session.get("search_input")}
       }
+      // console.log('query',query);
+      // console.log(Ideas.find(query, {"$sort": {"$natural": -1}}).fetch());
       return Ideas.find(query, {"$sort": {"$natural": -1}});
     },
 
@@ -99,11 +104,5 @@ if (Meteor.isClient) {
       // increment the counter when button is clicked
       Session.set("search_input", $('input[name=search]').val());
     }
-  });
-}
-
-if (Meteor.isServer) {
-  Meteor.startup(function () {
-    // code to run on server at startup
   });
 }

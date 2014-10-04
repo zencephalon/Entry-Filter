@@ -638,12 +638,13 @@ var ideas = [
 ]
 
 Ideas = new Meteor.Collection("ideas");
+// Ideas.remove();
 
 if (Meteor.isServer) {
     Meteor.startup(function() {
        if (Ideas.find().count() === 0) {
             root_id = Ideas.insert({text: "Hackathon Ideas"});
-            Ideas.forEach(function(idea) {
+            ideas.forEach(function(idea) {
                 idea["relations"] = {};
                 idea["parent_id"] = root_id;
                 Ideas.insert(idea);
