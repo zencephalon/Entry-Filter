@@ -6,12 +6,12 @@ if (Meteor.isClient) {
   Template.idea.helpers({
     bolded_text: function() {
       text = this.text;
-      search_input = Session.get("search_input");
-      if (search_input) {
-        text = text.replace(new RegExp('<b>', 'gi'), '');
-        text = text.replace(new RegExp('</b>', 'gi'), '');
-        text = text.replace(new RegExp(search_input, 'gi'), '<b>' + search_input + '</b>')
-      }
+      // search_input = Session.get("search_input");
+      // if (search_input) {
+      //   text = text.replace(new RegExp('<b>', 'gi'), '');
+      //   text = text.replace(new RegExp('</b>', 'gi'), '');
+      //   text = text.replace(new RegExp(search_input, 'gi'), '<b>' + search_input + '</b>')
+      // }
       return text;
     },
 
