@@ -10,47 +10,36 @@ if (Meteor.isClient) {
       if (search_input) {
         text = text.replace(new RegExp('<b>', 'gi'), '');
         text = text.replace(new RegExp('</b>', 'gi'), '');
-        text = text.replace(new RegExp(search_input, 'gi'), '<b>' + search_input + '</b>')
+        text = text.replace(new RegExp("(" + search_input + ")", 'gi'), '<b>$1</b>');
       }
       return text;
     },
-
-    // ideaNodeTextHtml: function() {
-
-    // },
     splitted: function() {
       if (this.text !== undefined) {
-        delims=['--',':'];
-        titleTxt=this.text.substr(0,80);
+        delims = ['--',':'];
+        titleTxt = this.text.substr(0,80);
         for(i in delims) {
           titleTxt=titleTxt.substr(0,indexOf(delims[i]));
         }
 
-        return {title:titleTxt,nontitle:this.text.substr(titleTxt.length)};
+        return {
+                title: titleTxt,
+                nontitle: this.text.substr(titleTxt.length)
+              };
       }
+    },
+
+    hidden: function() {
+      return this.hidden;
     },
 
     title: function() {
       splitted = Template.idea.splitted();
-      console.log(splitted);
+      // console.log(splitted);
       if (splitted !== undefined) {
         return splitted[0];
       }
     }
-    // title: function() {
-
-    //   title=Template.idea.boldedText();
-
-
-    //   splitted = Template.idea.splitted();
-    //   console.log(splitted);
-    //   //if (splitted !== undefined) {
-    //     return splitted[0].substr(80);
-    //   //}
-    // },
-    // nontitle: function() {
-    //   return this.splitted()[1];
-    // }
   })
 
   Template.idea.events({
@@ -75,22 +64,37 @@ if (Meteor.isClient) {
   })
 
   Template.idea_board.helpers({
-    filtered_ideas: function() {
-      query = Session.get("current_idea");
-      if (Session.get("search_input")) {
-        query[text] = {"$regex": Session.get("search_input")}
+    ideas: function() {
+      var allIdeas = Ideas.find(Session.get("current_idea")).fetch();
+      var allObjects = {};
+      allIdeas.forEach(function(idea, i) {
+        allObjects[idea._id] = i;
+      });
+      if (!Session.get('search_input')) {
+        console.log('here');
+        return allIdeas;
       }
-      return Ideas.find(query, {"$sort": {"$natural": -1}});
+      else {
+        query = Session.get("current_idea");
+        query.text = {"$regex": Session.get("search_input")}
+        var searchedIdeas = Ideas.find(query, {"$sort": {"$natural": -1}}).fetch();
+        allIdeas.forEach(function(idea, i) {
+          idea.hidden = 'hidden';
+          allIdeas[i] = idea;
+
+        });
+        searchedIdeas.forEach(function(sidea) {
+          var ideaIndex = allObjects[sidea._id];
+          var idea = allIdeas[ideaIndex]; 
+          idea.hidden = '';
+          allIdeas[ideaIndex] = idea;
+        });
+        return allIdeas
+      }
     },
 
     breadcrumb: function() {
       return Session.get("current_idea").parent_id;
-      // breadcrumb=[]
-      // breadcrumb.push(ideas.findOne())
-      // while(parent!==null) {
-
-      //   parent=findParent(parent_id).parent_id;
-      // }
     }
   });
 
@@ -99,11 +103,5 @@ if (Meteor.isClient) {
       // increment the counter when button is clicked
       Session.set("search_input", $('input[name=search]').val());
     }
-  });
-}
-
-if (Meteor.isServer) {
-  Meteor.startup(function () {
-    // code to run on server at startup
   });
 }

@@ -1,5 +1,5 @@
 <template name="idea">
-<div class="ideaContainer">
+<div class="ideaContainer {{hidden}}">
 <a href="/idea/{{id}}" data-idea-id="{{_id}}" class="subideas">::subideas::</a>
 <div class="idea">{{{bolded_text}}}</div>
 
@@ -18,7 +18,7 @@
   <input type="text" name="search"> Search
   {{> idea_form}}
   <ul>
-    {{#each filtered_ideas}}
+    {{#each ideas}}
       {{> idea}}
     {{/each}}
   </ul>
