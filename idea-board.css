@@ -10,3 +10,7 @@ a.subideas{
 a.subideas:hover {
   color:gray;
 }
+
+.hidden {
+  display: none;
+}
